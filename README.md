@@ -11,7 +11,6 @@ EventDashboard allows to visualize, display statistics and do multi-variables qu
 Events are added to the dashboard (in memory, for a configured time) like this:
 
 ```elixir
-import EventDashboard
 
 %EventDashboard{
            id: "vehicle_1",              # binary, the source of the event
@@ -19,6 +18,7 @@ import EventDashboard
 	   ev: "ALARM_1",                # binary, the event name
 	   ev_detail: %{km_maint: -133}  # map,
   } |> EventDashboard.add()
+
 
 ```
 
