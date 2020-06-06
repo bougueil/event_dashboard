@@ -32,7 +32,7 @@ To start using EventDashboard, you will need three steps:
   2. Configure EventDashboard, like Phoenix LiveDashboard 
   3. Add dashboard access
 
-### 1. Add the `phoenix_live_dashboard` dependency
+### 1. Add the `event_dashboard` dependency
 
 Add the following to your `mix.exs` and run `mix deps.get`:
 
