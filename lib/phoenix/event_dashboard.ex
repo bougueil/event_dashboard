@@ -37,6 +37,15 @@ defmodule EventDashboard do
     Memory.Event.put "#{id} #{at}", Map.to_list(event)
   end
 
+  @doc """
+  Push a msg to the EventDashboard messages dispatch
+  """
+  def push(msg) do
+    Registry.dispatch(EventDashboard.Registry, "edb", fn entries ->
+      for {pid, _} <- entries, do: send(pid, {:broadcast, msg})
+    end)
+  end
+
   def test() do
     num = 10_154
     for i <- 1..num do

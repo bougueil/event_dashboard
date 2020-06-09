@@ -42,9 +42,11 @@ defmodule EventDashboard.HomeLive do
         system_usage: system_usage,
 	common_events: common_events,
 	common_log_event_ids: common_log_event_ids,
+	events_rate: "-",
         backend: backend
       )
 
+    {:ok, _} = Registry.register(EventDashboard.Registry, "edb", [])
     {:ok, socket, temporary_assigns: @temporary_assigns}
   end
 
@@ -65,12 +67,39 @@ defmodule EventDashboard.HomeLive do
       <div class="col-sm-6">
         <h5 class="card-title">System information</h5>
 
-          <div class="col-lg-4 mb-4">
+        <div class="card mb-4">
+          <div class="card-body rounded">
+            <%= @system_info.banner %> [<%= @system_info.system_architecture %>]
+          </div>
+        </div>
+
+        <!-- Row with colorful version banners -->
+        <div class="row">
+
+         <div class="col-lg-4 mb-4">
             <div class="banner-card">
-              <h6 class="banner-card-title">Uptime</h6>
+              <h6 class="banner-card-title">Uptime
+                <%= hint do %>
+                  Time this dashboard is running.
+                <% end %>
+	      </h6>
               <div class="banner-card-value"><%= format_uptime(@system_usage.uptime) %></div>
             </div>
           </div>
+
+          <div class="col-lg-4 mb-4">
+            <div class="banner-card">
+              <h6 class="banner-card-title">
+                Events rate
+                <%= hint do %>
+                  Percentage of events in this dasboard to the total of events of the application. <br>Provided by the application.
+                <% end %>
+              </h6>
+              <div class="banner-card-value"><%= @events_rate %></div>
+            </div>
+          </div>
+
+        </div>
 
         <h5 class="card-title">Events information last <%= format_ttl(@system_info.ttl) %></h5>
         <!-- Row with colorful version banners -->
@@ -84,7 +113,6 @@ defmodule EventDashboard.HomeLive do
             </div>
           <% end %>
         </div>
-
       </div>
 
       <!-- Right column containing error usage information -->
@@ -106,10 +134,7 @@ defmodule EventDashboard.HomeLive do
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Right column containing id usage information -->
-      <div class="col-sm-6">
         <h5 class="card-title">
           Top 10 event sources
         </h5>
@@ -175,6 +200,10 @@ defmodule EventDashboard.HomeLive do
        common_events: SystemInfo.fetch_common_events(socket.assigns.menu.node),
        common_log_event_ids: SystemInfo.fetch_log_event_ids(socket.assigns.menu.node)
      )}
+  end
+
+  def handle_info({:broadcast, %{events_rate: percent}}, socket) when is_float(percent) do
+    {:noreply, assign(socket, events_rate: "#{Float.round(percent, 1)}%")}
   end
 
   defp versions_sections(), do: @versions_sections
