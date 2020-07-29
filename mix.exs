@@ -40,7 +40,7 @@ defmodule EventDashboard.MixProject do
   defp deps do
     [
       {:logger_file_backend, "~> 0.0.11"},
-      {:phoenix_live_view, "~> 0.13.3"},
+      {:phoenix_live_view, "~> 0.14.3"},
       {:telemetry_metrics, "~> 0.4.0 or ~> 0.5.0"},
       {:phoenix_html, "~> 2.14.1 or ~> 2.15"},
       {:telemetry_poller, "~> 0.4", only: :dev},
